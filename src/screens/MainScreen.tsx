@@ -1,14 +1,9 @@
-import { SafeAreaView, View, Text } from 'react-native';
 import React from 'react';
 
+import Main from '../components/Main/Main';
+
 const MainScreen = () => {
-  return (
-    <SafeAreaView>
-      <View>
-        <Text>MainScreen</Text>
-      </View>
-    </SafeAreaView>
-  );
+  return <Main />;
 };
 
 export default MainScreen;
