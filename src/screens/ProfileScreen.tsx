@@ -1,14 +1,8 @@
-import { SafeAreaView, View, Text } from 'react-native';
 import React from 'react';
+import Profile from '../components/Profile/Profile';
 
 const ProfileScreen = () => {
-  return (
-    <SafeAreaView>
-      <View>
-        <Text>ProfileScreen</Text>
-      </View>
-    </SafeAreaView>
-  );
+  return <Profile />;
 };
 
 export default ProfileScreen;
