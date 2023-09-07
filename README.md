@@ -1,5 +1,5 @@
 ![Group 2183](https://github.com/TATA-V/aurawave/assets/113578923/e04013a6-bd66-424f-96bc-3fe0e739cfbc)
-![0_start-night-frame (1) 1](https://github.com/TATA-V/aurawave/assets/113578923/286bc541-da12-495e-b6c4-36656b4c6ee7)
+</br>![0_start-night-frame (1) 1](https://github.com/TATA-V/aurawave/assets/113578923/286bc541-da12-495e-b6c4-36656b4c6ee7)
 
 ### ✉️ Commit Message
 
