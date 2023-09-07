@@ -12,8 +12,6 @@ interface IProps {
 }
 
 const BottomTab = ({ focused, route }: IProps) => {
-  let iconName;
-
   if (route.name === 'Main') {
     if (focused) {
       return <MoonBlueSvg />;
