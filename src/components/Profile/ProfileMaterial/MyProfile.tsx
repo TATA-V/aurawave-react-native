@@ -29,10 +29,10 @@ const MyProfile = () => {
 
   const handlePressableClick = () => {
     // 로그인 안 되어있을 땐 로그인 페이지로 이동
-    // navigation.push('Login');
+    navigation.push('Login');
 
     // 로그인이 되어있을 경우엔 닉네임 변경
-    setOpenTextInput(!openTextInput);
+    // setOpenTextInput(!openTextInput);
   };
 
   // 닉네임 변경

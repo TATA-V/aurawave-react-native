@@ -17,7 +17,6 @@ export default InactiveLandscape;
 const styles = StyleSheet.create({
   landscapeBlock: {
     paddingTop: 30,
-
     paddingHorizontal: 21,
     justifyContent: 'space-between',
     opacity: 0.87,

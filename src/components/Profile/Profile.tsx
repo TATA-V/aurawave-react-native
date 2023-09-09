@@ -37,7 +37,7 @@ const Profile = () => {
           {/* 풍경 비활성화 =>  InactiveLandscape 컴포넌트*/}
           {/* 풍경 활성화 =>  Landscape 컴포넌트*/}
           <InactiveLandscape />
-
+          {/* 로그아웃과 탈퇴하기 => LogoutAndDeleteAccount 컴포넌트 */}
           <LogoutAndDeleteAccount />
         </SafeAreaView>
       </ScrollView>
