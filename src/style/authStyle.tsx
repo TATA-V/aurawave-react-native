@@ -90,6 +90,9 @@ const authStyle = StyleSheet.create({
   kakaoBtn: {
     marginLeft: 6,
   },
+  authSubmit: {
+    paddingTop: 12,
+  },
 });
 
 export default authStyle;
