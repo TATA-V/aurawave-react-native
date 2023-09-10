@@ -93,6 +93,12 @@ const authStyle = StyleSheet.create({
   authSubmit: {
     paddingTop: 12,
   },
+  errorText: {
+    color: '#E41A1A',
+    fontSize: 11,
+    fontWeight: '400',
+    paddingTop: 3.5,
+  },
 });
 
 export default authStyle;
