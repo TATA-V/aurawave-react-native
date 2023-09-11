@@ -1,13 +1,15 @@
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import landscapeJpg from '../../assets/jpg-file/landscape.jpg';
+import { useRecoilValue } from 'recoil';
+import userState from '../../atom/userState';
 
 const Landscape = () => {
-  // 나중에 모닥불, 여름밤, 비, 눈 조건 걸어줘야 함
+  const { username, isLoggedIn } = useRecoilValue(userState);
+
   return (
     <View style={styles.landscapeBlock}>
-      {/* 나중에 유저의 이름으로 변경해줘야 함 */}
-      <Text style={styles.helloText}>Hello tata-v👋</Text>
+      <Text style={styles.helloText}>Hello{isLoggedIn && ` ${username}`}👋</Text>
       <ImageBackground style={styles.imgBackground} source={landscapeJpg}>
         <Text style={styles.modeText}>Stars</Text>
       </ImageBackground>

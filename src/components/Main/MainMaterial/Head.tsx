@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Pressable, Text, View } from 'react-native';
+import { Image, StyleSheet, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import defaultProfileJpg from '../../../assets/jpg-file/default-profile.jpg';
 import LogoMoonSvg from '../../Svg/LogoMoonSvg';
 import Icon from '../../Icon/Icon';
 
@@ -21,7 +22,9 @@ const Head = () => {
 
       <View style={styles.noticeAndProfileImg}>
         <Icon name="bell" size={21} color="#101D21" />
-        <Pressable onPress={goToProfile} style={styles.profileImg}></Pressable>
+        <Pressable onPress={goToProfile}>
+          <Image style={styles.profileImg} source={defaultProfileJpg} />
+        </Pressable>
       </View>
     </View>
   );
