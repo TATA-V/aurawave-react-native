@@ -30,8 +30,6 @@ const MyProfile = () => {
   const { username, photoURL, isLoggedIn } = userInfo;
   const user = auth.currentUser;
 
-  console.log(photoURL);
-
   // 닉네임 변경 버튼을 눌렀을 경우 textInput이 바로 focus됨
   useEffect(() => {
     if (openTextInput && textInputRef.current) {
@@ -76,7 +74,7 @@ const MyProfile = () => {
 
     let pickImg = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false, // crop을 위해 false로 설정
+      allowsEditing: false,
       aspect: [4, 4],
       quality: 1,
     });
@@ -95,18 +93,15 @@ const MyProfile = () => {
       const fileExtension = firstImageUri.split('.').slice(-1)[0];
       const metadata = { contentType: `image/${fileExtension}` };
 
-      console.log(metadata);
-
       let uploadTask = uploadBytesResumable(
         ref(storage, `user_image/${user.uid}`), // 저장 경로
-        blob // 이미지 파일
-        // metadata // 파일 타입
+        blob, // 이미지 파일
+        metadata // 파일 타입
       );
 
       uploadTask.on(
         'state_changed',
         (snapshot) => {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log('Upload is ' + progress + '% done');
           switch (snapshot.state) {
@@ -116,7 +111,6 @@ const MyProfile = () => {
             case 'running':
               console.log('Upload is running');
               break;
-
             default:
               break;
           }
@@ -124,16 +118,10 @@ const MyProfile = () => {
         (error) => {
           switch (error.code) {
             case 'storage/unauthorized':
-              // User doesn't have permission to access the object
               break;
             case 'storage/canceled':
-              // User canceled the upload
               break;
-
-            // ...
-
             case 'storage/unknown':
-              // Unknown error occurred, inspect error.serverResponse
               break;
 
             default:
@@ -141,14 +129,13 @@ const MyProfile = () => {
           }
         },
         () => {
-          // 업로드가 성공적으로 완료되었다.
-          // ⭐️이제 여기에서 다운로드 URL을 얻을 수 있다.
+          // 업로드가 성공적으로 완료
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             // 프로필 이미지 수정
             updateProfile(user, {
               photoURL: downloadURL,
             });
-
+            // 리코일에 저장
             setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
 
             // 파이어베이스 유저 이미지 수정하기
