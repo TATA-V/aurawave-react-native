@@ -3,15 +3,24 @@ import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 // import { getFirestore } from 'firebase/firestore';
 // import { getDatabase } from 'firebase/database';
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+  FIREBASE_DATABASE_URL,
+} from '@env';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBWHmyQlNy3S1FSlX_7nTmIu9bJ2sgBOZM',
-  authDomain: 'aurawave-46b93.firebaseapp.com',
-  projectId: 'aurawave-46b93',
-  storageBucket: 'aurawave-46b93.appspot.com',
-  messagingSenderId: '595726720448',
-  appId: '1:595726720448:web:ddad654e068031b5f17c25',
-  measurementId: 'G-7SVG4XXW18',
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
+  measurementId: FIREBASE_DATABASE_URL,
 };
 
 const app = initializeApp(firebaseConfig);

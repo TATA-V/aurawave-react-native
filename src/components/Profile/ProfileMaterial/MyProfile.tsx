@@ -15,9 +15,10 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useRecoilState } from 'recoil';
 import userState from '../../../atom/userState';
-import { auth } from '../../../firebase/config';
+import { auth, storage } from '../../../firebase/config';
 import { updateProfile } from 'firebase/auth';
-import authStyle from '../../../style/authStyle';
+import * as ImagePicker from 'expo-image-picker';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 
 const MyProfile = () => {
   const [openTextInput, setOpenTextInput] = useState(false);
@@ -27,6 +28,9 @@ const MyProfile = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const { username, photoURL, isLoggedIn } = userInfo;
+  const user = auth.currentUser;
+
+  console.log(photoURL);
 
   // 닉네임 변경 버튼을 눌렀을 경우 textInput이 바로 focus됨
   useEffect(() => {
@@ -48,7 +52,6 @@ const MyProfile = () => {
   const handleSubmit = async () => {
     setOpenTextInput(false);
     Keyboard.dismiss();
-    const user = auth.currentUser;
     let isValidUsername = changeUsername.length !== 0 && changeUsername.length < 21;
     // firebase 닉네임 변경해주기
     try {
@@ -59,6 +62,99 @@ const MyProfile = () => {
       }
     } catch (error) {
       console.log('닉네임 변경 실패:', error);
+    }
+  };
+
+  /* 프로필 이미지 수정 */
+  const handleUploadImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== 'granted') {
+      console.error('카메라 롤 접근 권한이 필요합니다.');
+      return;
+    }
+
+    let pickImg = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false, // crop을 위해 false로 설정
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    let firstImageUri;
+    if (pickImg.canceled) {
+      return null;
+    } else if (pickImg.assets && pickImg.assets.length > 0) {
+      // 이미지가 선택되었으며 assets 배열에 정보가 포함되어 있다.
+      firstImageUri = pickImg.assets[0].uri;
+    }
+
+    if (user && firstImageUri) {
+      const response = await fetch(firstImageUri);
+      const blob = await response.blob();
+      const fileExtension = firstImageUri.split('.').slice(-1)[0];
+      const metadata = { contentType: `image/${fileExtension}` };
+
+      console.log(metadata);
+
+      let uploadTask = uploadBytesResumable(
+        ref(storage, `user_image/${user.uid}`), // 저장 경로
+        blob // 이미지 파일
+        // metadata // 파일 타입
+      );
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+
+            default:
+              break;
+          }
+        },
+        (error) => {
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+
+            // ...
+
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+
+            default:
+              break;
+          }
+        },
+        () => {
+          // 업로드가 성공적으로 완료되었다.
+          // ⭐️이제 여기에서 다운로드 URL을 얻을 수 있다.
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            // 프로필 이미지 수정
+            updateProfile(user, {
+              photoURL: downloadURL,
+            });
+
+            setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
+
+            // 파이어베이스 유저 이미지 수정하기
+          });
+        }
+      );
     }
   };
 
@@ -106,11 +202,13 @@ const MyProfile = () => {
       <View style={styles.profileImgBox}>
         <Image
           style={styles.profileImg}
-          source={isLoggedIn && photoURL !== null ? photoURL : defaultProfileJpg}
+          // source={defaultProfileJpg}
+          source={isLoggedIn && photoURL !== null ? { uri: photoURL } : defaultProfileJpg}
+          // source={{ uri: firstImage }}
         />
         {/* 이미지 수정 */}
         {isLoggedIn && (
-          <Pressable style={styles.penIconBox}>
+          <Pressable onPress={handleUploadImage} style={styles.penIconBox}>
             <Icon style={styles.penIcon} name="pen" size={9.5} color="#283437" />
           </Pressable>
         )}
@@ -196,7 +294,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 10,
     elevation: 3,
-    shadowColor: 'rgb(16, 29, 33, 0.2)',
+    shadowColor: '#575c5d',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,

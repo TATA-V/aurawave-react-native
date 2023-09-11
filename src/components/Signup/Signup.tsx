@@ -32,9 +32,6 @@ const Signup = () => {
   const checkNumPwdRef = useRef<Object | null>(null);
   const auth = getAuth();
 
-  console.log('auth2:', auth2);
-  console.log('auth:', auth);
-
   const {
     watch,
     control,
