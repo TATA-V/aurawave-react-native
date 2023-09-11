@@ -18,6 +18,8 @@ import authStyle from '../../style/authStyle';
 import GoogleSvg from '../Svg/GoogleSvg';
 import KakaoSvg from '../Svg/KakaoSvg';
 import { useForm, Controller } from 'react-hook-form';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth as auth2 } from '../../firebase/config';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 
@@ -26,8 +28,12 @@ const Signup = () => {
   const nameRef = useRef<TextInput | null>(null);
   const pwdRef = useRef<TextInput | null>(null);
   const checkPwdRef = useRef<TextInput | null>(null);
-  const pwdNumRef = useRef<TextInput | null>(null);
-  const checkNumPwdRef = useRef<TextInput | null>(null);
+  const pwdNumRef = useRef<Object | null>(null);
+  const checkNumPwdRef = useRef<Object | null>(null);
+  const auth = getAuth();
+
+  console.log('auth2:', auth2);
+  console.log('auth:', auth);
 
   const {
     watch,
@@ -39,11 +45,25 @@ const Signup = () => {
   pwdNumRef.current = watch('password');
   checkNumPwdRef.current = watch('checkPassword');
 
-  const onSubmit = handleSubmit((data) => {
-    if (checkPwdRef.current !== pwdRef.current) return;
+  /* submit */
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      if (pwdNumRef.current === checkNumPwdRef.current) {
+        const { email, username, password } = data;
+        // 회원가입
+        await createUserWithEmailAndPassword(auth, email, password);
 
-    const { email, username, password } = data;
-    console.log(email, username, password);
+        const user = auth.currentUser;
+        if (user) {
+          await updateProfile(user, { displayName: username });
+        }
+
+        // 로그인 페이지 이동
+        await navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.log('회원가입 실패:', error);
+    }
   });
 
   return (
@@ -111,11 +131,11 @@ const Signup = () => {
               <Text style={authStyle.errorText}>필수 입력 항목입니다.</Text>
             )}
             {errors.username && errors.username.type === 'maxLength' && (
-              <Text style={authStyle.errorText}>최대 10자 이하로 입력해주세요.</Text>
+              <Text style={authStyle.errorText}>최대 20자 이하로 입력해주세요.</Text>
             )}
             {errors.username && errors.username.type === 'pattern' && (
               <Text style={authStyle.errorText}>
-                2자 이상 10자 이하의 영문, 숫자, 한글로 작성해주세요.
+                2자 이상 20자 이하의 영문, 숫자, 한글로 작성해주세요.
               </Text>
             )}
 
@@ -180,10 +200,10 @@ const Signup = () => {
               )}
               name="checkPassword"
             />
-            {errors.password && errors.password.type === 'required' && (
+            {errors.checkPassword && errors.checkPassword.type === 'required' && (
               <Text style={authStyle.errorText}>필수 입력 항목입니다.</Text>
             )}
-            {checkNumPwdRef.current !== pwdNumRef.current && (
+            {checkNumPwdRef.current !== '' && checkNumPwdRef.current !== pwdNumRef.current && (
               <Text style={authStyle.errorText}>비밀번호가 일치하지 않습니다.</Text>
             )}
           </View>

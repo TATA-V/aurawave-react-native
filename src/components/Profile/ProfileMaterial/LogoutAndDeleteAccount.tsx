@@ -2,11 +2,33 @@ import { Pressable, Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import crayonPng from '../../../assets/png-file/crayon-line.png';
 import Icon from '../../Icon/Icon';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../firebase/config';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSetRecoilState } from 'recoil';
+import userState from '../../../atom/userState';
 
 const LogoutAndDeleteAccount = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const setUserState = useSetRecoilState(userState);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    await navigation.navigate('Login');
+    await setUserState((data) => ({ ...data, username: '', photoURL: '', isLoggedIn: false }));
+  };
+
+  /* style */
+  const dynamicStyles = StyleSheet.create({
+    logoutWidth: {
+      width: 72,
+    },
+  });
+
   return (
     <View style={styles.container}>
-      <Pressable style={styles.logoutBox}>
+      <Pressable onPress={handleLogout} style={styles.logoutBox}>
         <Icon name="logout-circle" size={12.54} color="#4C5C61" />
         <Text style={styles.logoutText}>로그아웃</Text>
         <Image style={styles.crayongImg} source={crayonPng} />

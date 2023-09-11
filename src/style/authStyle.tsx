@@ -94,7 +94,7 @@ const authStyle = StyleSheet.create({
     paddingTop: 12,
   },
   errorText: {
-    color: '#E41A1A',
+    color: '#4B99C5',
     fontSize: 11,
     fontWeight: '400',
     paddingTop: 3.5,

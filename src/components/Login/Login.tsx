@@ -18,8 +18,12 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import safeAreaStyle from '../../style/safeAreaStyle';
 import { useForm, Controller } from 'react-hook-form';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase/config';
+import { useSetRecoilState } from 'recoil';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
+import userState from '../../atom/userState';
 
 const Login = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -29,10 +33,28 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const setUserState = useSetRecoilState(userState);
 
-  const onSubmit = handleSubmit((data) => {
-    const { email, password } = data;
-    console.log(email, password);
+  /* submit */
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const { email, password } = data;
+      await signInWithEmailAndPassword(auth, email, password);
+      await navigation.navigate('Main');
+
+      // 리코일에 유저정보 저장
+      if (auth.currentUser) {
+        const { displayName, photoURL } = auth.currentUser;
+        setUserState((data) => ({
+          ...data,
+          username: displayName,
+          photoURL: photoURL,
+          isLoggedIn: true,
+        }));
+      }
+    } catch (error) {
+      console.log('로그인 실패:', error);
+    }
   });
 
   return (
