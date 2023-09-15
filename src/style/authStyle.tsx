@@ -63,9 +63,14 @@ const authStyle = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
   },
-  grayLine: {
+  grayLineLogin: {
     height: 1,
     width: 103,
+    backgroundColor: '#E5E5E5',
+  },
+  grayLineSignup: {
+    height: 1,
+    width: 97,
     backgroundColor: '#E5E5E5',
   },
   grayLineTextBox: {

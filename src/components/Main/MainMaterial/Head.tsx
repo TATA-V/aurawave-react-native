@@ -5,9 +5,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import defaultProfileJpg from '../../../assets/jpg-file/default-profile.jpg';
 import LogoMoonSvg from '../../Svg/LogoMoonSvg';
 import Icon from '../../Icon/Icon';
+import { useRecoilValue } from 'recoil';
+import userState from '../../../atom/userState';
 
 const Head = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const { photoURL, isLoggedIn } = useRecoilValue(userState);
 
   const goToProfile = () => {
     navigation.navigate('Profile');
@@ -23,7 +26,10 @@ const Head = () => {
       <View style={styles.noticeAndProfileImg}>
         <Icon name="bell" size={21} color="#101D21" />
         <Pressable onPress={goToProfile}>
-          <Image style={styles.profileImg} source={defaultProfileJpg} />
+          <Image
+            style={styles.profileImg}
+            source={isLoggedIn && photoURL !== null ? { uri: photoURL } : defaultProfileJpg}
+          />
         </Pressable>
       </View>
     </View>

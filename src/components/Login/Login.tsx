@@ -8,8 +8,9 @@ import {
   Text,
   View,
   Pressable,
+  Alert,
 } from 'react-native';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import GoogleSvg from '../Svg/GoogleSvg';
 import KakaoSvg from '../Svg/KakaoSvg';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -18,14 +19,14 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import safeAreaStyle from '../../style/safeAreaStyle';
 import { useForm, Controller } from 'react-hook-form';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import { useSetRecoilState } from 'recoil';
-
 import GoBackHead from '../GoBackHead/GoBackHead';
 import userState from '../../atom/userState';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const pwdRef = useRef<TextInput | null>(null);
   const {
@@ -38,9 +39,9 @@ const Login = () => {
   /* submit */
   const onSubmit = handleSubmit(async (data) => {
     try {
+      setLoading(true);
       const { email, password } = data;
       await signInWithEmailAndPassword(auth, email, password);
-      await navigation.navigate('Main');
 
       // 리코일에 유저정보 저장
       if (auth.currentUser) {
@@ -52,8 +53,14 @@ const Login = () => {
           isLoggedIn: true,
         }));
       }
+      navigation.navigate('Main');
+      setLoading(false);
     } catch (error) {
       console.log('로그인 실패:', error);
+      setLoading(false);
+      Alert.alert('로그인 도중에 문제가 발생했습니다.', String(error), [{ text: '닫기' }], {
+        cancelable: true,
+      });
     }
   });
 
@@ -146,17 +153,19 @@ const Login = () => {
             </LinearGradient>
           </Pressable>
           <Pressable
+            disabled={loading}
             onPress={() => navigation.navigate('Signup')}
             style={[authStyle.navigateBox, styles.submitWidth]}
           >
             <Text style={authStyle.navigateText}>회원가입</Text>
           </Pressable>
 
+          {/* 구글, 카카오로 로그인 */}
           <View style={authStyle.snsLoginBox}>
             <View style={authStyle.grayLineTextBox}>
-              <View style={authStyle.grayLine} />
+              <View style={authStyle.grayLineLogin} />
               <Text style={authStyle.snsText}>SNS 계정으로 로그인</Text>
-              <View style={authStyle.grayLine} />
+              <View style={authStyle.grayLineLogin} />
             </View>
 
             <View style={authStyle.googleAndKakao}>

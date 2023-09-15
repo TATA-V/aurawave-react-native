@@ -1,11 +1,12 @@
 import * as Font from 'expo-font';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { setCustomText } from 'react-native-global-props';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import app from './src/firebase/config';
 import { RecoilRoot } from 'recoil';
+import Toast from 'react-native-toast-message';
 
 import MainScreen from './src/screens/MainScreen';
 import MusicScreen from './src/screens/MusicScreen';
@@ -83,28 +84,31 @@ export default function App() {
   };
 
   return (
-    <RecoilRoot>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Bottom" component={BottomTabScreen} />
-          <Stack.Screen name="AddMusicToPlaylist" component={AddMusicToPlaylistScreen} />
-          <Stack.Screen name="AllMusic" component={AllMusicScreen} />
-          <Stack.Screen name="AurawavePlaylist" component={AurawavePlaylistScreen} />
-          <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
-          <Stack.Screen name="CreatePlaylist" component={CreatePlaylistScreen} />
-          <Stack.Screen name="CurrentPlaylist" component={CurrentPlaylistScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="MusicDetail" component={MusicDetailScreen} />
-          <Stack.Screen name="MyFriends" component={MyFriendsScreen} />
-          <Stack.Screen name="MyPlaylists" component={MyPlaylistsScreen} />
-          <Stack.Screen name="OtherUserPlaylist" component={OtherUserPlaylistScreen} />
-          <Stack.Screen name="PlaylistDetail" component={PlaylistDetailScreen} />
-          <Stack.Screen name="SearchUser" component={SearchUserScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-          <Stack.Screen name="UserDetail" component={UserDetailScreen} />
-          <Stack.Screen name="UserPlaylists" component={UserPlaylistsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </RecoilRoot>
+    <>
+      <RecoilRoot>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Bottom" component={BottomTabScreen} />
+            <Stack.Screen name="AddMusicToPlaylist" component={AddMusicToPlaylistScreen} />
+            <Stack.Screen name="AllMusic" component={AllMusicScreen} />
+            <Stack.Screen name="AurawavePlaylist" component={AurawavePlaylistScreen} />
+            <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+            <Stack.Screen name="CreatePlaylist" component={CreatePlaylistScreen} />
+            <Stack.Screen name="CurrentPlaylist" component={CurrentPlaylistScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="MusicDetail" component={MusicDetailScreen} />
+            <Stack.Screen name="MyFriends" component={MyFriendsScreen} />
+            <Stack.Screen name="MyPlaylists" component={MyPlaylistsScreen} />
+            <Stack.Screen name="OtherUserPlaylist" component={OtherUserPlaylistScreen} />
+            <Stack.Screen name="PlaylistDetail" component={PlaylistDetailScreen} />
+            <Stack.Screen name="SearchUser" component={SearchUserScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+            <Stack.Screen name="UserDetail" component={UserDetailScreen} />
+            <Stack.Screen name="UserPlaylists" component={UserPlaylistsScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </RecoilRoot>
+      <Toast />
+    </>
   );
 }

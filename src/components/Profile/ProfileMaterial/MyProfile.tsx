@@ -138,7 +138,7 @@ const MyProfile = () => {
             // 리코일에 저장
             setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
 
-            // 파이어베이스 유저 이미지 수정하기
+            // 파이어스토어 유저 이미지 수정하기
           });
         }
       );
@@ -189,9 +189,7 @@ const MyProfile = () => {
       <View style={styles.profileImgBox}>
         <Image
           style={styles.profileImg}
-          // source={defaultProfileJpg}
           source={isLoggedIn && photoURL !== null ? { uri: photoURL } : defaultProfileJpg}
-          // source={{ uri: firstImage }}
         />
         {/* 이미지 수정 */}
         {isLoggedIn && (
